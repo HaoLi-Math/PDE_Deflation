@@ -1,6 +1,8 @@
 import numpy
 import matplotlib
+import torch
 
+h = 0.001
 # generate uniform distributed points in a domain [a1,b1]X[a2,b2]X...X[ad,bd]
 # domain_intervals = [[a1,b1],[a2,b2],...,[ad,bd]]
 def generate_uniform_points_in_cube(domain_intervals,N):
@@ -141,6 +143,14 @@ def generate_learning_rates(highest_lr_pow,lowest_lr_pow,total_iterations):
 def generate_deflation_alpha(highest_lr_pow,lowest_lr_pow,total_iterations):
     alpha = 10 ** (lowest_lr_pow + (highest_lr_pow - lowest_lr_pow)/total_iterations*numpy.arange(0,total_iterations+1))
     return alpha
+
+def get_dxi(net, tensor_x_batch, i):
+    s = torch.zeros((tensor_x_batch.shape[0],))
+    ei = torch.zeros(tensor_x_batch.shape)
+    ei[:,i] = 1
+    s = s + (net(tensor_x_batch+h*ei)-net(tensor_x_batch-h*ei))/2/h
+    return s
+    
 
     
 #pts = generate_uniform_points_in_cube(numpy.array([[-1,1],[-1,1]]),400)

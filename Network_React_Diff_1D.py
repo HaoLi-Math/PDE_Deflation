@@ -20,6 +20,7 @@ a = 0
 b = 10 
 a0 = 0
 b0 = 0
+h = 0.001
 
 def Neumann_Lift(a0, b0, a, b, x):
     return (b0-a0)/2/(b-a)*(x-a)**2+a0*x
@@ -35,7 +36,7 @@ class network(torch.nn.Module):
         self.layer3 = torch.nn.Linear(m,m)
         self.layer4 = torch.nn.Linear(m,1)
         if activation_type == 'ReLU3':
-            self.activation = lambda x: relu(x**3)/1000
+            self.activation = lambda x: relu(x**3)
         elif activation_type == 'ReLU':
             self.activation = lambda x: relu(x)
         elif activation_type == 'sigmoid':
@@ -98,8 +99,7 @@ class network(torch.nn.Module):
 
     
     
-    
-    
+
     
     
     

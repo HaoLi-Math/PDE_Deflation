@@ -36,14 +36,8 @@ S_s = (1+rho)**(-2)
 
 left = 0
 right = 10
+scale = 10
 
-# the point-wise Du: Input x is a sampling point of d variables ; Output is a numpy vector which means the result of Du(x))
-def Du(model,x_batch):
-    ei = zeros(x_batch.shape)
-    ei[:,0] = 1
-    s = (model.predict(x_batch+h*ei)-2*model.predict(x_batch)+model.predict(x_batch-h*ei))/h/h
-    s = s - scale*scale*model.predict(x_batch)**2 + scale*scale*scale*x_batch[:,0]
-    return s
 
 # the point-wise residual: Input x is a batch of sampling points of d variables (tensor); Output is tensor vector
 def res1(net_A, net_S, tensor_x_batch):
@@ -55,26 +49,27 @@ def res1(net_A, net_S, tensor_x_batch):
         #     s = - (net_A(tensor_x_batch+h*ei)-net_A(tensor_x_batch-h*ei))/h/2
         # else:
         #     s = s + D*(net_A(tensor_x_batch+h*ei)-2*net_A(tensor_x_batch)+net_A(tensor_x_batch-h*ei))/h/h
-        s = s + D*(net_A(tensor_x_batch+h*ei)-2*net_A(tensor_x_batch)+net_A(tensor_x_batch-h*ei))/h/h
-    s = s + net_S(tensor_x_batch)*net_A(tensor_x_batch)**2 -net_A(tensor_x_batch) + rho
-    return s.reshape(tensor_x_batch.shape)
+        s = s + (net_A(tensor_x_batch+h*ei)-2*net_A(tensor_x_batch)+net_A(tensor_x_batch-h*ei))/h/h
+    s = 1/scale/scale*D*s + net_S(tensor_x_batch)*net_A(tensor_x_batch)**2 -net_A(tensor_x_batch) + rho
+    return s
 
 def res2(net_A, net_S, tensor_x_batch):
     s = torch.zeros((tensor_x_batch.shape[0],))
     for i in range(tensor_x_batch.shape[1]):
         ei = torch.zeros(tensor_x_batch.shape)
-        ei[:,0] = 1
+        ei[:,i] = 1
         s = s + (net_S(tensor_x_batch+h*ei)-2*net_S(tensor_x_batch)+net_S(tensor_x_batch-h*ei))/h/h
-    s = s + mu*(1 - net_S(tensor_x_batch)*net_A(tensor_x_batch)**2)
-    return s.reshape(tensor_x_batch.shape)
+    s = 1/scale/scale*s + mu*(1 - net_S(tensor_x_batch)*net_A(tensor_x_batch)**2)
+    return s
 
 def res(net_A, net_S, tensor_x_batch):
-    return res1(net_A, net_S, tensor_x_batch) + res2(net_A, net_S, tensor_x_batch)
+    return res1(net_A, net_S, tensor_x_batch)**2 + res2(net_A, net_S, tensor_x_batch)**2
 
 # define the right hand function for numpy array (N sampling points of d variables)
 def f(x_batch):
     f = zeros((x_batch.shape[0],))
     return f
+
 
 # the point-wise Bu for tensor (N sampling points of d variables)
 def Bu_ft(model,tensor_x_batch):
@@ -98,7 +93,7 @@ def domain_shape():
 def domain_parameter(d):
     intervals = zeros((d,2))
     for i in range(d):
-        intervals[i,:] = array([left,right])
+        intervals[i,:] = array([left,right/scale])
     return intervals
 
 # If this is a time-dependent problem
