@@ -33,7 +33,7 @@ N_inside_train = 1000 # number of trainning sampling points inside the domain in
 N_inside_test = 1000 # number of test sampling points inside the domain
 N_pts_deflation = 1000 # number of deflation sampling points inside the domain
 n_update_each_batch = 1 # number of iterations in each epoch (for the same batch of points)
-lrseq = generate_learning_rates(-2,-4,n_epoch)
+# lrseq = generate_learning_rates(-2,-4,n_epoch)
 lambda_term = 100
 
 
@@ -74,7 +74,7 @@ flag_output_results = True
 ########### Depending parameters #############
 net = network_file.network(d,m,K, activation_type = activation, boundary_control_type = boundary_control, initial_constant = initial_constant)
 
-optimizer = optim.Adam(net.parameters(),lr=lrseq[0])
+optimizer = optim.Adam(net.parameters(),lr=lr_pre)
 lossseq = zeros((n_epoch,))
 resseq = zeros((n_epoch,))
 
@@ -100,7 +100,7 @@ while k < n_epoch:
     tensor_x_deflation = Tensor(x_deflation)
     tensor_x_deflation.requires_grad=False
     for param_group in optimizer.param_groups:
-        if flag_preiteration_by_small_lr == True and k == 0:
+        if flag_preiteration_by_small_lr == True:
             param_group['lr'] = lr_pre
         else:
             param_group['lr'] = lrseq[k]
