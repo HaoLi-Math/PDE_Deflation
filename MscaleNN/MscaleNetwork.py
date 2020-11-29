@@ -51,6 +51,7 @@ class network(torch.nn.Module):
         if not initial_constant == 'none':
             torch.nn.init.constant_(self.layer3.bias, initial_constant)
         self.K = torch.tensor([i//(m//K) for i in range(2*m)])+1
+        self.K = torch.tensor.double(self.K)
         self.K.requires_grad = False
 
     def forward(self, tensor_x_batch):
