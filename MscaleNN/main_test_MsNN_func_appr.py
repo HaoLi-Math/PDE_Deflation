@@ -68,7 +68,7 @@ if not time_dependent_type == 'none':
 flag_compute_loss_each_epoch = True
 n_epoch_show_info = 100
 flag_show_sn_info = False
-flag_show_plot = True
+flag_show_plot = False
 flag_output_results = True
     
 ########### Depending parameters #############
