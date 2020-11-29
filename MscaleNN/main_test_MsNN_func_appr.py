@@ -20,8 +20,8 @@ import pickle
 import time
 from solution_HighFrequency import res, domain_shape, domain_parameter, time_dependent_type, time_interval, func
 
-# torch.set_default_tensor_type('torch.cuda.DoubleTensor')
-torch.set_default_tensor_type('torch.DoubleTensor')
+torch.set_default_tensor_type('torch.cuda.DoubleTensor')
+# torch.set_default_tensor_type('torch.DoubleTensor')
 
 ########### Set parameters #############
 
