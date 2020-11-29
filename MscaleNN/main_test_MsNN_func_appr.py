@@ -131,7 +131,7 @@ while k < n_epoch:
         if flag_compute_loss_each_epoch:
             print("epoch = %d, loss = %2.5f, residual = %2.5f" %(k+1, loss.item(), resseq[k]))
         else:
-            print("epoch = %d" % k, end='')
+            print("epoch = %d" % k)
         print("\n")
     
     k = k + 1
