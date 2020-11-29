@@ -21,7 +21,7 @@ right = np.pi
 scale = 1
 
 def func(x):
-    return (np.sin(23*x) + np.sin(137*x) + np.sin(203*x)).view((x.shape[0],)).clone().detach()
+    return (torch.sin(23*x) + torch.sin(137*x) + torch.sin(203*x)).view((x.shape[0],)).clone().detach()
 
 # the point-wise residual: Input x is a batch of sampling points of d variables (tensor); Output is tensor vector
 def res(net, tensor_x_batch):
