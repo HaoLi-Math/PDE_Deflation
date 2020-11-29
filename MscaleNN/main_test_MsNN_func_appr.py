@@ -115,7 +115,7 @@ while k < n_epoch:
         loss.backward(retain_graph=not flag_compute_loss_each_epoch)
         optimizer.step()
     lossseq[k] = loss.item()
-    resseq[k] = np.sqrt(1/N_inside_train*torch.sum(res(net, tensor_x1_test)**2).detach().numpy())
+    resseq[k] = np.sqrt(1/N_inside_train*torch.sum(res(net, tensor_x1_test)**2).detach().cpu().numpy())
     ## Show information
     if k%n_epoch_show_info==0:
         if flag_show_plot == True:
