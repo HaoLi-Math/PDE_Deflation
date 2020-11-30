@@ -23,9 +23,9 @@ class network(torch.nn.Module):
         self.layer1 = torch.nn.Linear(d,2*m)
         self.layer2 = torch.nn.Linear(2*m,m)
         self.layer3 = torch.nn.Linear(m,m)
-        self.layer3 = torch.nn.Linear(m,m)
-        self.layer3 = torch.nn.Linear(m,m)
-        self.layer4 = torch.nn.Linear(m,1)
+        self.layer4 = torch.nn.Linear(m,m)
+        self.layer5 = torch.nn.Linear(m,m)
+        self.layer6 = torch.nn.Linear(m,1)
         if activation_type == 'ReLU3':
             self.activation = lambda x: relu(x**3)
         elif activation_type == 'ReLU':
@@ -55,10 +55,12 @@ class network(torch.nn.Module):
 
     def forward(self, tensor_x_batch):
         y = self.layer1(tensor_x_batch)
-        # y = self.K * (y - self.layer1.bias) + self.layer1.bias
+        y = self.K * (y - self.layer1.bias) + self.layer1.bias
         y = self.layer2(self.activation(y))
         y = self.layer3(self.activation(y))
         y = self.layer4(self.activation(y))
+        y = self.layer5(self.activation(y))
+        y = self.layer6(self.activation(y))
         if self.boundary_control_type == 'none':
             return y.squeeze(1)
         elif self.boundary_control_type == 'Dirichlet':

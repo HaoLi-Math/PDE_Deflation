@@ -20,8 +20,8 @@ import pickle
 import time
 from solution_HighFrequency import res, domain_shape, domain_parameter, time_dependent_type, time_interval, func
 
-# torch.set_default_tensor_type('torch.cuda.DoubleTensor')
-torch.set_default_tensor_type('torch.DoubleTensor')
+torch.set_default_tensor_type('torch.cuda.DoubleTensor')
+# torch.set_default_tensor_type('torch.DoubleTensor')
 
 ########### Set parameters #############
 
@@ -43,7 +43,7 @@ lambda_term = 100
 activation = 'sReLU'  # activation function for the solution net
 boundary_control = 'none'  # if the solution net architecture satisfies the boundary condition automatically 
 flag_preiteration_by_small_lr = True  # If pre iteration by small learning rates
-lr_pre = 1e-4
+lr_pre = 1e-5
 n_update_each_batch_pre = 100
 h_Du_t = 0.01  # time length for computing the first derivative of t by finite difference (for the hyperbolic equations)
 flag_reset_select_net_each_epoch = False  # if reset selection net for each outer iteration
@@ -85,6 +85,8 @@ x_plot[:,0] = np.linspace(domain_intervals[0,0],domain_intervals[0,1],N_plot)
 
 # Training
 k = 0
+print()
+
 while k < n_epoch:
     ## generate training and testing data (the shape is (N,d)) or (N,d+1) 
     ## label 1 is for the points inside the domain, 2 is for those on the bondary or at the initial time
@@ -109,13 +111,14 @@ while k < n_epoch:
         temp = n_update_each_batch_pre
     else:
         temp = n_update_each_batch
+    f = func(tensor_x1_train)
     for i_update in range(temp):
-        loss = 1/N_inside_train*torch.sum(res(net, tensor_x1_train)**2)
+        loss = torch.sum(res(net, tensor_x1_train)**2)/N_inside_train
         optimizer.zero_grad()
         loss.backward(retain_graph=not flag_compute_loss_each_epoch)
         optimizer.step()
     lossseq[k] = loss.item()
-    resseq[k] = np.sqrt(1/N_inside_train*torch.sum(res(net, tensor_x1_test)**2).detach().cpu().numpy())
+    resseq[k] = np.sqrt(torch.sum(res(net, tensor_x1_test)**2).detach().cpu().numpy()/N_inside_train)
     ## Show information
     if k%n_epoch_show_info==0:
         if flag_show_plot == True:
