@@ -55,7 +55,7 @@ class network(torch.nn.Module):
 
     def forward(self, tensor_x_batch):
         y = self.layer1(tensor_x_batch)
-        y = self.K * (y - self.layer1.bias) + self.layer1.bias
+        # y = self.K * (y - self.layer1.bias) + self.layer1.bias
         y = self.layer2(self.activation(y))
         y = self.layer3(self.activation(y))
         y = self.layer4(self.activation(y))

@@ -20,8 +20,8 @@ import pickle
 import time
 from solution_HighFrequency import res, domain_shape, domain_parameter, time_dependent_type, time_interval, func
 
-torch.set_default_tensor_type('torch.cuda.DoubleTensor')
-# torch.set_default_tensor_type('torch.DoubleTensor')
+# torch.set_default_tensor_type('torch.cuda.DoubleTensor')
+torch.set_default_tensor_type('torch.DoubleTensor')
 
 ########### Set parameters #############
 
@@ -43,7 +43,7 @@ lambda_term = 100
 activation = 'sReLU'  # activation function for the solution net
 boundary_control = 'none'  # if the solution net architecture satisfies the boundary condition automatically 
 flag_preiteration_by_small_lr = True  # If pre iteration by small learning rates
-lr_pre = 1e-5
+lr_pre = 1e-4
 n_update_each_batch_pre = 100
 h_Du_t = 0.01  # time length for computing the first derivative of t by finite difference (for the hyperbolic equations)
 flag_reset_select_net_each_epoch = False  # if reset selection net for each outer iteration

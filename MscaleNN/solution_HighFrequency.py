@@ -12,8 +12,8 @@ from numpy import array, prod, sum, zeros, exp, max, log, sqrt
 from torch.nn.functional import relu
 from torch.nn import Softplus
 
-torch.set_default_tensor_type('torch.cuda.DoubleTensor')
-# torch.set_default_tensor_type('torch.DoubleTensor')
+# torch.set_default_tensor_type('torch.cuda.DoubleTensor')
+torch.set_default_tensor_type('torch.DoubleTensor')
 h = 0.001
 
 left = 1
