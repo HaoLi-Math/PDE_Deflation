@@ -103,7 +103,7 @@ while k < n_epoch:
     tensor_x_deflation.requires_grad=False
     for param_group in optimizer.param_groups:
         if flag_preiteration_by_small_lr == True:
-            param_group['lr'] = lr_pre
+            param_group['lr'] = lr_pre - k*5*10**(-7)
         else:
             param_group['lr'] = lrseq[k]
     
